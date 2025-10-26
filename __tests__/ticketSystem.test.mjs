@@ -170,7 +170,7 @@ describe('Bus Ticket Booking System (DOM)', () => {
   });
 
   // Test submission with a very large seat input
-  test('very long seat input is handled correctly', () => {
+  test('very large seat input is handled correctly', () => {
     // ARRANGE: Set up inputs with a large seat value
     document.getElementById('name').value = 'Grace';
     document.getElementById('destination').value = 'New York';
@@ -258,8 +258,8 @@ describe('Bus Ticket Booking System (DOM)', () => {
 
     // ASSERT: Verify confirmation includes the long name (check start and suffix)
     expect(document.getElementById('message').innerText.trim()).toContain(
-      'Booking confirmed for a'.repeat(50) + ' to Paris. Seats: 2. Total fare: $20.'
-    ); // Adjusted to match a significant portion
+      'Booking confirmed for ' + 'a'.repeat(100) + ' to Paris. Seats: 2. Total fare: $20.'
+    ); // Match 100 "a"s plus suffix
   });
 
   test('multiple submissions with invalid input', () => {
