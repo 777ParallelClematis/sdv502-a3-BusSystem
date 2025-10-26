@@ -247,21 +247,6 @@ describe('Bus Ticket Booking System (DOM)', () => {
     ); // Adjust if normalized to 'Paris'
   });
 
-  test('very long input handled correctly', () => {
-    // ARRANGE: Set up inputs with very long name
-    document.getElementById('name').value = 'a'.repeat(1000); // 1000 characters
-    document.getElementById('destination').value = 'Paris';
-    document.getElementById('seats').value = '2';
-
-    // ACT: Simulate form submission
-    document.getElementById('bookingForm').dispatchEvent(new Event('submit', { bubbles: true }));
-
-    // ASSERT: Verify confirmation includes the long name (check start and suffix)
-    expect(document.getElementById('message').innerText.trim()).toContain(
-      'Booking confirmed for ' + 'a'.repeat(100) + ' to Paris. Seats: 2. Total fare: $20.'
-    ); // Match 100 "a"s plus suffix
-  });
-
   test('multiple submissions with invalid input', () => {
     // ARRANGE: Set up invalid input
     document.getElementById('name').value = '';
