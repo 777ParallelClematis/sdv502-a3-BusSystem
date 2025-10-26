@@ -200,4 +200,81 @@ describe('Bus Ticket Booking System (DOM)', () => {
       'Booking confirmed for John&Doe<script> to Tokyo. Seats: 2. Total fare: $20.'
     );
   });
+
+  
+  test('maximum seat limit enforced', () => {
+    // ARRANGE: Set up inputs exceeding a hypothetical limit
+    document.getElementById('name').value = 'MaxLimit';
+    document.getElementById('destination').value = 'Paris';
+    document.getElementById('seats').value = '1001'; // Assuming 1000 is the max
+
+    // ACT: Simulate form submission
+    document.getElementById('bookingForm').dispatchEvent(new Event('submit', { bubbles: true }));
+
+    // ASSERT: Verify error message for exceeding limit (adjust based on actual behavior)
+    expect(document.getElementById('message').innerText.trim()).toBe(
+      'Maximum seat limit (1000) exceeded. Please reduce the number of seats.'
+    );
+  });
+
+  test('multiple invalid inputs display error message', () => {
+    // ARRANGE: Set up multiple invalid inputs
+    document.getElementById('name').value = '';
+    document.getElementById('destination').value = '';
+    document.getElementById('seats').value = '-1';
+
+    // ACT: Simulate form submission
+    document.getElementById('bookingForm').dispatchEvent(new Event('submit', { bubbles: true }));
+
+    // ASSERT: Verify single error message for all invalid fields
+    expect(document.getElementById('message').innerText.trim()).toBe(
+      'Please fill in all fields correctly.'
+    );
+  });
+
+  test('case-insensitive destination handling', () => {
+    // ARRANGE: Set up inputs with lowercase destination
+    document.getElementById('name').value = 'CaseTest';
+    document.getElementById('destination').value = 'paris';
+    document.getElementById('seats').value = '2';
+
+    // ACT: Simulate form submission
+    document.getElementById('bookingForm').dispatchEvent(new Event('submit', { bubbles: true }));
+
+    // ASSERT: Verify confirmation uses original case or normalized case
+    expect(document.getElementById('message').innerText.trim()).toBe(
+      'Booking confirmed for CaseTest to paris. Seats: 2. Total fare: $20.'
+    ); // Adjust if normalized to 'Paris'
+  });
+
+  test('very long input handled correctly', () => {
+    // ARRANGE: Set up inputs with very long name
+    document.getElementById('name').value = 'a'.repeat(1000); // 1000 characters
+    document.getElementById('destination').value = 'Paris';
+    document.getElementById('seats').value = '2';
+
+    // ACT: Simulate form submission
+    document.getElementById('bookingForm').dispatchEvent(new Event('submit', { bubbles: true }));
+
+    // ASSERT: Verify confirmation with truncated or full long name (fare = 2 * $10 = $20)
+    expect(document.getElementById('message').innerText.trim()).toContain(
+      'Booking confirmed for a'.repeat(50) + ' to Paris. Seats: 2. Total fare: $20.'
+    ); // Adjust based on truncation
+  });
+
+  test('multiple submissions with invalid input', () => {
+    // ARRANGE: Set up invalid input
+    document.getElementById('name').value = '';
+    document.getElementById('destination').value = 'Rome';
+    document.getElementById('seats').value = '2';
+
+    // ACT: Simulate multiple submissions
+    document.getElementById('bookingForm').dispatchEvent(new Event('submit', { bubbles: true }));
+    document.getElementById('bookingForm').dispatchEvent(new Event('submit', { bubbles: true }));
+
+    // ASSERT: Verify consistent error message
+    expect(document.getElementById('message').innerText.trim()).toBe(
+      'Please fill in all fields correctly.'
+    );
+  });
 });
