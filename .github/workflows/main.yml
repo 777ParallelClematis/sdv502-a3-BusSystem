@@ -27,13 +27,13 @@ jobs:
       run: npx eslint src/ __tests__/
 
     - name: Run Jest tests
-      run: npm test -- --testMatch "**/__tests__/**/*.mjs" --reporters=default --reporters=github-actions
+      run: npx jest --config package.json --testMatch "**/__tests__/**/*.mjs" --reporters=default --reporters=github-actions
       env:
         CI: true
         NODE_OPTIONS: '--experimental-vm-modules --no-warnings'
 
     - name: Add coverage reporting
-      run: npm test -- --coverage --testMatch "**/__tests__/**/*.mjs" --reporters=default --reporters=github-actions
+      run: npx jest --config package.json --coverage --testMatch "**/__tests__/**/*.mjs" --reporters=default --reporters=github-actions
       env:
         CI: true
         NODE_OPTIONS: '--experimental-vm-modules --no-warnings'
