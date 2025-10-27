@@ -146,9 +146,10 @@ describe('Bus Ticket Booking System (DOM)', () => {
     const messageElement = document.getElementById('message');
     const rawMessage = messageElement.innerText;
     const trimmedMessage = messageElement.innerText.trim();
-    console.log('Raw innerText:', JSON.stringify(rawMessage)); // Log with quotes to show hidden chars
-    console.log('Trimmed message:', JSON.stringify(trimmedMessage)); // Log trimmed value
-    expect(trimmedMessage).toBe('Booking confirmed for to Madrid. Seats: 2. Total fare: $20.');
+    console.log('Raw innerText:', JSON.stringify(rawMessage)); // Show hidden chars
+    console.log('Trimmed message:', JSON.stringify(trimmedMessage)); // Show trimmed value
+    console.log('Message length:', trimmedMessage.length); // Check length
+    expect(trimmedMessage).toMatch(/^Booking confirmed for to Madrid. Seats: 2. Total fare: \$20\.$/);
   });
 
   // Test submission with a very large seat input
