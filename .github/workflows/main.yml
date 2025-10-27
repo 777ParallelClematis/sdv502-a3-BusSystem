@@ -23,6 +23,9 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
+    - name: Run ESLint
+      run: npx eslint src/ __tests__/
+
     - name: Run Jest tests
       run: NODE_OPTIONS='--experimental-vm-modules --no-warnings' npx jest --testMatch "**/__tests__/**/*.mjs" --reporters=default --reporters=github-actions
       env:
