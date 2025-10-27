@@ -24,7 +24,8 @@ jobs:
       run: npm ci --no-optional
 
     - name: Configure Jest
-      run: echo "NODE_OPTIONS='--experimental-vm-modules --no-warnings'" >> $GITHUB_ENV
+      run: |
+        echo "NODE_OPTIONS=--experimental-vm-modules --no-warnings" >> $GITHUB_ENV
 
     - name: Run ESLint
       run: npx eslint src/ __tests__/
