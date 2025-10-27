@@ -27,14 +27,16 @@ jobs:
       run: npx eslint src/ __tests__/
 
     - name: Run Jest tests
-      run: NODE_OPTIONS='--experimental-vm-modules --no-warnings' npx jest --testMatch "**/__tests__/**/*.mjs" --reporters=default --reporters=github-actions
+      run: npm test -- --testMatch "**/__tests__/**/*.mjs" --reporters=default --reporters=github-actions
       env:
         CI: true
+        NODE_OPTIONS: '--experimental-vm-modules --no-warnings'
 
     - name: Add coverage reporting
-      run: NODE_OPTIONS='--experimental-vm-modules --no-warnings' npx jest --coverage --testMatch "**/__tests__/**/*.mjs" --reporters=default --reporters=github-actions
+      run: npm test -- --coverage --testMatch "**/__tests__/**/*.mjs" --reporters=default --reporters=github-actions
       env:
         CI: true
+        NODE_OPTIONS: '--experimental-vm-modules --no-warnings'
 
     - name: Upload coverage report
       uses: actions/upload-artifact@v4
