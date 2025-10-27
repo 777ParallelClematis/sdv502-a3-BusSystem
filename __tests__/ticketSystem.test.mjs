@@ -5,7 +5,6 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { initBookingForm } from '../src/script.js';
-// Explicitly import Jest globals to ensure availability
 import { describe, beforeAll, beforeEach, test, expect } from '@jest/globals';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -19,9 +18,14 @@ describe('Bus Ticket Booking System (DOM)', () => {
     // ARRANGE: Prepare the DOM environment
     const htmlPath = path.resolve(__dirname, '../src/index.html');
     console.log('Resolved path to index.html:', htmlPath);
-    html = fs.readFileSync(htmlPath, 'utf8');
-    document.documentElement.innerHTML = html;
-    initBookingForm();
+    try {
+      html = fs.readFileSync(htmlPath, 'utf8');
+      document.documentElement.innerHTML = html;
+      initBookingForm();
+    } catch (error) {
+      console.error('Error loading index.html:', error.message);
+      throw error; // Fail the test if file is missing
+    }
   });
 
   beforeEach(() => {
@@ -130,20 +134,22 @@ describe('Bus Ticket Booking System (DOM)', () => {
     );
   });
 
-test('whitespace-only name is treated as valid', () => {
-  // ARRANGE: Set up inputs with a whitespace-only name
-  document.getElementById('name').value = ' ';
-  document.getElementById('destination').value = 'Madrid';
-  document.getElementById('seats').value = '2';
-  // ACT: Simulate form submission
-  document.getElementById('bookingForm').dispatchEvent(new Event('submit', { bubbles: true }));
-  // ASSERT: Verify confirmation message as whitespace is treated as valid (fare = 2 * $10 = $20)
-  const messageElement = document.getElementById('message');
-  const message = messageElement.innerText.trim();
-  console.log('Raw innerText:', messageElement.innerText); // Log raw value
-  console.log('Trimmed message:', message); // Log trimmed value
-  expect(message).toEqual('Booking confirmed for to Madrid. Seats: 2. Total fare: $20.');
-});
+  // Test submission with whitespace-only name
+  test('whitespace-only name is treated as valid', () => {
+    // ARRANGE: Set up inputs with a whitespace-only name
+    document.getElementById('name').value = ' ';
+    document.getElementById('destination').value = 'Madrid';
+    document.getElementById('seats').value = '2';
+    // ACT: Simulate form submission
+    document.getElementById('bookingForm').dispatchEvent(new Event('submit', { bubbles: true }));
+    // ASSERT: Verify confirmation message as whitespace is treated as valid (fare = 2 * $10 = $20)
+    const messageElement = document.getElementById('message');
+    const rawMessage = messageElement.innerText;
+    const trimmedMessage = messageElement.innerText.trim();
+    console.log('Raw innerText:', JSON.stringify(rawMessage)); // Log with quotes to show hidden chars
+    console.log('Trimmed message:', JSON.stringify(trimmedMessage)); // Log trimmed value
+    expect(trimmedMessage).toBe('Booking confirmed for to Madrid. Seats: 2. Total fare: $20.');
+  });
 
   // Test submission with a very large seat input
   test('very large seat input is handled correctly', () => {
@@ -212,7 +218,7 @@ test('whitespace-only name is treated as valid', () => {
     // ASSERT: Verify confirmation uses original case or normalized case
     expect(document.getElementById('message').innerText.trim()).toBe(
       'Booking confirmed for CaseTest to paris. Seats: 2. Total fare: $20.'
-    ); // Adjust if normalized to 'Paris'
+    );
   });
 
   // Test multiple submissions with invalid input
