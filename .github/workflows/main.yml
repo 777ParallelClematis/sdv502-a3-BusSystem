@@ -29,6 +29,12 @@ jobs:
     - name: Run ESLint
       run: npx eslint src/ __tests__/
 
+    - name: Debug environment
+      run: |
+        node -e "console.log('Node version:', process.version)"
+        node -e "console.log('Current directory:', process.cwd())"
+        ls -l src/index.html || echo 'index.html not found'
+
     - name: Run Jest tests
       run: npx jest --env=jsdom --testMatch "**/__tests__/**/*.mjs" --reporters=default --reporters=github-actions
       env:

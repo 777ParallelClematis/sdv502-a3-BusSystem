@@ -130,19 +130,20 @@ describe('Bus Ticket Booking System (DOM)', () => {
     );
   });
 
-  // Test submission with whitespace-only name
-  test('whitespace-only name is treated as valid', () => {
-    // ARRANGE: Set up inputs with a whitespace-only name
-    document.getElementById('name').value = ' ';
-    document.getElementById('destination').value = 'Madrid';
-    document.getElementById('seats').value = '2';
-    // ACT: Simulate form submission
-    document.getElementById('bookingForm').dispatchEvent(new Event('submit', { bubbles: true }));
-    // ASSERT: Verify confirmation message as whitespace is treated as valid (fare = 2 * $10 = $20)
-    expect(document.getElementById('message').innerText.trim()).toBe(
-      'Booking confirmed for to Madrid. Seats: 2. Total fare: $20.'
-    );
-  });
+test('whitespace-only name is treated as valid', () => {
+  // ARRANGE: Set up inputs with a whitespace-only name
+  document.getElementById('name').value = ' ';
+  document.getElementById('destination').value = 'Madrid';
+  document.getElementById('seats').value = '2';
+  // ACT: Simulate form submission
+  document.getElementById('bookingForm').dispatchEvent(new Event('submit', { bubbles: true }));
+  // ASSERT: Verify confirmation message as whitespace is treated as valid (fare = 2 * $10 = $20)
+  const messageElement = document.getElementById('message');
+  const message = messageElement.innerText.trim();
+  console.log('Raw innerText:', messageElement.innerText); // Log raw value
+  console.log('Trimmed message:', message); // Log trimmed value
+  expect(message).toEqual('Booking confirmed for to Madrid. Seats: 2. Total fare: $20.');
+});
 
   // Test submission with a very large seat input
   test('very large seat input is handled correctly', () => {
