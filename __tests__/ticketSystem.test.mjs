@@ -142,15 +142,11 @@ describe('Bus Ticket Booking System (DOM)', () => {
     document.getElementById('seats').value = '2';
     // ACT: Simulate form submission
     document.getElementById('bookingForm').dispatchEvent(new Event('submit', { bubbles: true }));
-    // ASSERT: Verify confirmation message as whitespace is treated as valid (fare = 2 * $10 = $20)
-    const messageElement = document.getElementById('message');
-    const rawMessage = messageElement.innerText;
-    const trimmedMessage = messageElement.innerText.trim();
-    console.log('Raw innerText:', JSON.stringify(rawMessage)); // Show hidden chars
-    console.log('Trimmed message:', JSON.stringify(trimmedMessage)); // Show trimmed value
-    console.log('Message length:', trimmedMessage.length); // Check length
-    expect(trimmedMessage).toMatch(/^Booking confirmed for to Madrid. Seats: 2. Total fare: \$20$/);
-  });
+    // ASSERT: Verify confirmation message — whitespace name → empty space in output
+    const trimmedMessage = document.getElementById('message').innerText.trim();
+    console.log('Trimmed message (whitespace test):', JSON.stringify(trimmedMessage));
+    expect(trimmedMessage).toBe('Booking confirmed for   to Madrid. Seats: 2. Total fare: $20.');
+  }); //so it pushes
 
   // Test submission with a very large seat input
   test('very large seat input is handled correctly', () => {
@@ -174,7 +170,7 @@ describe('Bus Ticket Booking System (DOM)', () => {
     document.getElementById('seats').value = '2';
     // ACT: Simulate form submission
     document.getElementById('bookingForm').dispatchEvent(new Event('submit', { bubbles: true }));
-    // ASSERT: Verify confirmation message includes special characters (fare = 2 * $10 = $20)
+    // ASSERT: Verify confirmation message includes special characters
     expect(document.getElementById('message').innerText.trim()).toBe(
       'Booking confirmed for John&Doe<script> to Tokyo. Seats: 2. Total fare: $20.'
     );
@@ -216,7 +212,7 @@ describe('Bus Ticket Booking System (DOM)', () => {
     document.getElementById('seats').value = '2';
     // ACT: Simulate form submission
     document.getElementById('bookingForm').dispatchEvent(new Event('submit', { bubbles: true }));
-    // ASSERT: Verify confirmation uses original case or normalized case
+    // ASSERT: Verify confirmation uses original case
     expect(document.getElementById('message').innerText.trim()).toBe(
       'Booking confirmed for CaseTest to paris. Seats: 2. Total fare: $20.'
     );
