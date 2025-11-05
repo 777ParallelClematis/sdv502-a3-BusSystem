@@ -48,7 +48,7 @@ jobs:
       continue-on-error: true
       env:
         CI: true
-        NODE_OPTIONS: '--experimental-vm-modules --no-warnings'
+#        NODE_OPTIONS: '--experimental-vm-modules --no-warnings'
 
     - name: Upload coverage report
       uses: actions/upload-artifact@v4
