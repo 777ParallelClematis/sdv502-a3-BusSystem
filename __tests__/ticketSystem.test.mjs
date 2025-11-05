@@ -8,6 +8,7 @@ import { initBookingForm } from '../src/script.js';
 import { describe, beforeAll, beforeEach, test, expect } from '@jest/globals';
 //nonsensecommentforthesakeofhavingachangeforevidencegathering
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
